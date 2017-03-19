@@ -38,7 +38,7 @@ class WikisController < ApplicationController
       flash[:notice] = "Successfully updated wiki."
       redirect_to @wiki
     else
-      flash[:alert] = "Error: could not update wiki."
+      flash.now[:alert] = "Error: could not update wiki."
       render :edit
     end
 
@@ -47,6 +47,7 @@ class WikisController < ApplicationController
   def destroy
     @wiki = Wiki.find(params[:id])
     if @wiki.destroy
+      flash[:notice] = "Successfully deleted wiki."
       redirect_to wikis_path
     else
       flash[:alert] = "Error: could not delete wiki."
