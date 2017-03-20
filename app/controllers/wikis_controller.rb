@@ -1,4 +1,7 @@
 class WikisController < ApplicationController
+  #  an after_find and after_initialize callback is triggered
+  #  for each object that is found and instantiated by a finder,
+  # with after_initialize being triggered after new objects are instantiated as well.
 
   def index
     @wikis = Wiki.all
@@ -33,6 +36,7 @@ class WikisController < ApplicationController
 
   def update
     @wiki = Wiki.find(params[:id])
+    authorize @wiki
 
     if @wiki.update_attributes(wiki_params)
       flash[:notice] = "Successfully updated wiki."
