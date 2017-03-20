@@ -1,6 +1,7 @@
 class WikiPolicy < ApplicationPolicy
   def initialize(user,record)
-    super(user, record)
+    @user = user
+    @record = record
   end
   def update?
     user.present?
