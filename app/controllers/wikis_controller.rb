@@ -15,6 +15,8 @@ class WikisController < ApplicationController
     @wiki = Wiki.new(wiki_params)
     @wiki.user = current_user
 
+    authorize_private_wiki if @wiki.private
+
 # will present errors if faile
     if @wiki.save
       flash[:notice] = "Successfully created a wiki."
@@ -22,6 +24,7 @@ class WikisController < ApplicationController
     else
       flash.now[:alert] = "Error: could not create wiki."
       render :new
+    #  test if you can redirect
     end
 
   end
@@ -37,13 +40,16 @@ class WikisController < ApplicationController
   def update
     @wiki = Wiki.find(params[:id])
     authorize @wiki
+    @wiki.assign_attributes(wiki_params)
 
-    if @wiki.update_attributes(wiki_params)
+    authorize_private_wiki if @wiki.private
+
+    if @wiki.save
       flash[:notice] = "Successfully updated wiki."
       redirect_to @wiki
     else
       flash.now[:alert] = "Error: could not update wiki."
-      render :edit
+      redirect_to edit_wiki_path
     end
 
   end
@@ -64,7 +70,15 @@ class WikisController < ApplicationController
 
   # used to mass assign params(from forms) and create/update wiki
   def wiki_params
-    params.require(:wiki).permit(:title, :body, :private)
+      params.require(:wiki).permit(:title, :body, :private)
   end
+
+  def authorize_private_wiki
+    unless (current_user.admin? || current_user.premium?)
+      flash.now[:alert] = "You must be a premium user to create a private wiki."
+      render :new
+    end
+  end
+
 
 end

@@ -14,11 +14,12 @@
           <li><%= link_to "Wikis", wikis_path %></li>
 
 
+
           <div class="pull-right">
             <%if user_signed_in?%>
 
                   <div class="pull-right">
-                    <%= current_user.email %> <br/> <%= link_to "Sign Out", destroy_user_session_path(current_user), method: :delete %>
+                    <%= link_to "#{current_user.email}", edit_user_registration_path %><br/> <%= link_to "Sign Out", destroy_user_session_path(current_user), method: :delete %>
                   </div>
 
             <%else%>
