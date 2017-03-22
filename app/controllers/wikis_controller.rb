@@ -4,7 +4,12 @@ class WikisController < ApplicationController
   # with after_initialize being triggered after new objects are instantiated as well.
 
   def index
-    @wikis = Wiki.all
+
+    if (current_user.admin? || current_user.premium)
+      @wikis = Wiki.all
+    else
+      @wikis = Wiki.find_by(private: false)
+    end
   end
 
   def new
@@ -31,10 +36,14 @@ class WikisController < ApplicationController
 
   def show
     @wiki = Wiki.find(params[:id])
+    authorize_private_wiki if @wiki.private
+
   end
 
   def edit
     @wiki = Wiki.find(params[:id])
+    authorize_private_wiki if @wiki.private
+
   end
 
   def update
