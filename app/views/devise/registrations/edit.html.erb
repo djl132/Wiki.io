@@ -48,7 +48,7 @@
 
 
 <h4>Downgrade</h4>
-<small><%=link_to "Downgrade", registration_downgrades_path , method: :post, class: "btn btn-danger"%></small>
+<small><%=link_to "Downgrade", registration_downgrades_path , data: {confirm: "Downgrading will make all your private wikis public. Are you sure?" }, method: :post, class: "btn btn-danger"%></small>
 
 
 <h4>Cancel my account</h4>

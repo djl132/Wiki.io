@@ -5,10 +5,10 @@ class WikisController < ApplicationController
 
   def index
 
-    if (current_user.admin? || current_user.premium)
+    if (current_user.admin? || current_user.premium?)
       @wikis = Wiki.all
     else
-      @wikis = Wiki.find_by(private: false)
+      @wikis = Wiki.where(private: false)
     end
   end
 
@@ -84,8 +84,8 @@ class WikisController < ApplicationController
 
   def authorize_private_wiki
     unless (current_user.admin? || current_user.premium?)
-      flash.now[:alert] = "You must be a premium user to create a private wiki."
-      render :new
+      flash[:alert] = "You must be a premium user to create a private wiki."
+      redirect_to :back
     end
   end
 
