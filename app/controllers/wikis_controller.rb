@@ -4,12 +4,9 @@ class WikisController < ApplicationController
   # with after_initialize being triggered after new objects are instantiated as well.
 
   def index
+    # shwo authorized wikis based on role of user
 
-    if (current_user.admin? || current_user.premium?)
-      @wikis = Wiki.all
-    else
-      @wikis = Wiki.where(private: false)
-    end
+    @wikis = policy_scope(Wiki)
   end
 
   def new

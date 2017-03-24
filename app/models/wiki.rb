@@ -1,5 +1,8 @@
 class Wiki < ApplicationRecord
   belongs_to :user
+  has_many :collaborators
+
+  has_many :users, through: :collaborators
 
 # immediately after initialization, now when I save
 # , since i need to check attribute private before it's saved

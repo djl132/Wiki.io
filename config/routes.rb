@@ -1,9 +1,14 @@
 Rails.application.routes.draw do
 
 
+
   resources :charges, only: [:new, :create, :update]
 
   resources :wikis
+
+  resources :collaborators, only: [:create, :destroy]
+
+
 
 
 # name of the controller(usually plural form of resource + controller)

@@ -9,6 +9,28 @@
       <li>Never insult dogs.</li>
       <li>Smile when you type.</li>
     </ul>
+
+
+
+<% if current_user.admin? || current_user.premium?%>
+    <% if collabs = @wiki.collaborators %>
+        <ul>
+          <% collabs.each do |collab| %>
+            <li><%= link_to "X #{collab.user.email}", collab, class: 'btn btn-danger', method: :delete %></li>
+          <% end %>
+        </ul>
+    <%end%>
+
+
+    <%= form_tag '/collaborators' do %>
+        <%= text_field_tag :email %>
+        <%= hidden_field_tag :wiki_id, @wiki.id %>
+
+        <%= submit_tag "Invite", class: 'btn btn-success' %>
+        <% end %>
+<% end %>
+
+
   </div>
 
    <div class="col-md-8">
