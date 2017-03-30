@@ -4,7 +4,8 @@ class WikiPolicy < ApplicationPolicy
     @record = record
   end
   def update?
-    user.present?
+    user == @record.user
+    # redirect_to @record
   end
 
   class Scope
@@ -40,6 +41,7 @@ class WikiPolicy < ApplicationPolicy
          wikis # return the wikis array we've built up
        end
   end
+
 
 
 end
