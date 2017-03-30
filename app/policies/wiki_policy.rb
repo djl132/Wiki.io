@@ -4,8 +4,10 @@ class WikiPolicy < ApplicationPolicy
     @record = record
   end
   def update?
-    user.present?
+    user == @record.user
+    # redirect_to @record
   end
+
 
 
 end

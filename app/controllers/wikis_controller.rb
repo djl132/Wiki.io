@@ -3,6 +3,8 @@ class WikisController < ApplicationController
   #  for each object that is found and instantiated by a finder,
   # with after_initialize being triggered after new objects are instantiated as well.
 
+  before_action :authorize_sign_in, except: [:show, :index]
+
   def index
     @wikis = Wiki.all
   end
@@ -36,13 +38,13 @@ class WikisController < ApplicationController
 
   def update
     @wiki = Wiki.find(params[:id])
-    authorize @wiki
 
-    if @wiki.update_attributes(wiki_params)
+# if the policy is
+    if policy(@wiki).update? && @wiki.update_attributes(wiki_params)
       flash[:notice] = "Successfully updated wiki."
       redirect_to @wiki
     else
-      flash.now[:alert] = "Error: could not update wiki."
+      flash.now[:alert] = "Error: could not update wiki. Must own wiki."
       render :edit
     end
 
@@ -50,11 +52,11 @@ class WikisController < ApplicationController
 
   def destroy
     @wiki = Wiki.find(params[:id])
-    if @wiki.destroy
+    if policy(@wiki).update? && @wiki.destroy
       flash[:notice] = "Successfully deleted wiki."
       redirect_to wikis_path
     else
-      flash[:alert] = "Error: could not delete wiki."
+      flash[:alert] = "Error: could not delete wiki. Must own wiki."
       redirect_to wikis_path
     end
   end
@@ -65,6 +67,12 @@ class WikisController < ApplicationController
   # used to mass assign params(from forms) and create/update wiki
   def wiki_params
     params.require(:wiki).permit(:title, :body, :private)
+  end
+
+  def authorize_sign_in
+    unless current_user
+      redirect_to new_user_session_path
+    end
   end
 
 end
